@@ -1,0 +1,26 @@
+@import 'colors';
+
+.weather {
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+}
+
+.weather-info {
+    width: 500px;
+    height: 500px;
+    background-color: $green;
+    margin: auto;
+    border-radius: 50%;
+    display: grid;
+    h1,
+    h3 {
+        color: white;
+        text-shadow: darken($color: $white, $amount: 0.5);
+        margin: auto;
+    }
+}
