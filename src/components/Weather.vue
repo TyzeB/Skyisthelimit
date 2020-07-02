@@ -16,16 +16,22 @@ export default {
     city: String,
     temperature: String,
     description: String,
-    image: String,
-  },
-  updated() {
-    const weather = document.querySelector(".weather-info");
-    weather.style.backgroundImage = `url('${this.image}')`;
-    weather.style.backgroundRepeat = 'no-repeat';
-    weather.style.backgroundSize = 'cover';
+    image: String
   },
   methods: {
-    
+    changeImage: function() {
+      const weather = document.querySelector(".weather-info");
+      weather.style.backgroundImage = `url("${this.image}")`;
+      weather.style.backgroundRepeat = "no-repeat";
+      weather.style.backgroundSize = "cover";
+    }
+  },
+  watch: {
+    image: function(value) {
+      if (value) {
+        this.changeImage();
+      }
+    }
   }
 };
 </script>

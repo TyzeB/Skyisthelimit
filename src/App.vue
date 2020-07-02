@@ -9,7 +9,7 @@
       />
       <div class="search">
         <input id="city-input" type="text" v-model="cityName" />
-        <button id="get-weather">
+        <button id="get-weather" v-on:click="fetchAll()">
           <i class="fa fa-search"></i>
         </button>
       </div>
@@ -25,18 +25,6 @@ export default {
   components: {
     Weather
   },
-  mounted() {
-    const submit = document.querySelector("#get-weather");
-    const self = this;
-    submit.addEventListener("click", () => {
-      if (!self.cityName) {
-        alert("Please enter city name first");
-        return;
-      }
-      self.fetchData(process.env.VUE_APP_API_URL, self.cityName);
-      self.fetchImage(self.cityName);
-    });
-  },
   data() {
     return {
       cityName: "",
@@ -47,16 +35,15 @@ export default {
     };
   },
   methods: {
-    async fetchData(url, city) {
+    fetchData: function(url, city) {
       const self = this;
-      await fetch(`${url}q=${city}&appid=${process.env.VUE_APP_API_KEY}&units=metric`)
-        .then(response => {
+      fetch(`${url}q=${city}&appid=${process.env.VUE_APP_API_KEY}&units=metric`)
+        .then(async response => {
+          const data = await response.json();
           if (!response.ok) {
-            throw Error("Ooops, something went wrong!");
+            const error = (data && data.message) || response.statusText;
+            return Promise.reject(error);
           }
-          return response.json();
-        })
-        .then(data => {
           self.temperature = `${parseInt(data.main.temp).toFixed(0)} °C`;
           self.description = data.weather[0].description.toUpperCase();
           self.finalCity = self.cityName;
@@ -65,23 +52,29 @@ export default {
           alert(error);
         });
     },
-    async fetchImage(city) {
+    fetchImage: function(city) {
       const self = this;
       city = city.toLowerCase().replace(/\s+/g, "-");
-      await fetch(`https://api.teleport.org/api/urban_areas/slug:${city}/images/`)
-        .then(response => {
+      fetch(`https://api.teleport.org/api/urban_areas/slug:${city}/images/`)
+        .then(async response => {
+          const data = await response.json();
           if (!response.ok) {
-            throw Error("Ooops, something went wrong!");
+            const error = (data && data.message) || response.statusText;
+            return Promise.reject(error);
           }
-          return response.json();
-        })
-        .then(data => {
-          console.log(data);
           self.image = data.photos[0].image.web;
         })
         .catch(error => {
           alert(error);
         });
+    },
+    fetchAll: function() {
+      if (!this.cityName) {
+        alert("Please enter city name first");
+        return;
+      }
+      this.fetchImage(this.cityName);
+      this.fetchData(process.env.VUE_APP_API_URL, this.cityName);
     }
   }
 };
