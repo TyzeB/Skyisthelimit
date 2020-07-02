@@ -2,6 +2,9 @@
 A simple weather app built on Vue.js.
 For the backend I used OpenWeatherMap API.
 
+#### The app can be checked out here:
+https://skyisthelimit.herokuapp.com/
+
 ## Project setup
 ```
 yarn install
